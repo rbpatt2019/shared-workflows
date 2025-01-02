@@ -2,14 +2,15 @@
   description = "rbpatt2019's shared github workflows'";
 
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
   };
 
   outputs =
     {
       nixpkgs,
+      treefmt-nix,
       self,
       ...
     }@inputs:
@@ -19,8 +20,17 @@
         "aarch64-linux" # Raspberry Pi 4
         "aarch64-darwin" # Apple Silicon
       ];
+      get_pkgs = system: nixpkgs.legacyPackages.${system};
     in
     {
+      formatter = forAllSystems (
+        system:
+        let
+          pkgs = get_pkgs system;
+          treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        in
+        treefmtEval.config.build.wrapper
+      );
       # These only run with `nix flake check` if they are here, and not imported
       checks = forAllSystems (system: {
         pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
@@ -39,8 +49,16 @@
               entry = "Git submodules are not allowed here: ";
               types = [ "directory" ];
             };
-            yamlfmt.enable = true;
+            actionlint.enable = true;
             yamllint.enable = true;
+            flake-checker.enable = true;
+            treefmt_custom = {
+              # running treefmt integrated requires a toml
+              enable = true;
+              name = "treefmt";
+              entry = "nix fmt";
+              pass_filenames = true;
+            };
           };
         };
       });
@@ -48,7 +66,7 @@
       devShells = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = get_pkgs system;
           precommit = self.checks.${system}.pre-commit-check;
         in
         import ./shell.nix { inherit pkgs precommit; }
