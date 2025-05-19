@@ -1,12 +1,16 @@
 name: Update (nix)
 on:
   workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
     secrets:
       pat:
         required: true
 jobs:
   flake-update:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
