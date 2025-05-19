@@ -1,0 +1,31 @@
+name: Check (nix)
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+jobs:
+  checks:
+    runs-on: ${{ inputs.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Enable Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Run Checks # uses hooks from pre-commit
+        id: run_checks
+        run: |
+          set -o pipefail
+          nix flake check 2>&1 |
+            tee /tmp/nix-flake-check.log
+      - name: Print full failure logs
+        if: ${{ failure() && steps.run_checks.conclusion == 'failure' }}
+        run: |-
+          DRV=$(
+            grep "For full logs, run" /tmp/nix-flake-check.log |
+            grep -oE "/nix/store/.*.drv"
+          )
+          nix log "$DRV"

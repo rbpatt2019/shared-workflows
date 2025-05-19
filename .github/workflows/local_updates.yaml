@@ -1,0 +1,13 @@
+# This is for updating this repo, and is not designed to be re-used.
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: 1 0 1,15 * *
+jobs:
+  check_repo:
+    uses: rbpatt2019/shared-workflows/.github/workflows/update_nix.yaml@main
+    with:
+      os: ubuntu-latest
+    secrets:
+      pat: ${{ secrets.token }}

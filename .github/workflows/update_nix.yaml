@@ -1,0 +1,27 @@
+name: Update (nix)
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+    secrets:
+      pat:
+        required: true
+jobs:
+  flake-update:
+    runs-on: ${{ inputs.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Update lock file
+        run: nix flake update -v --commit-lock-file
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.pat }}
+          title: 'ci(flake.lock): Automatic flake update'
+          branch: auto/flake-update
+          delete-branch: true
