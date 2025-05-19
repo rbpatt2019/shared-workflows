@@ -6,6 +6,6 @@ on:
     branches: [main]
 jobs:
   check_repo:
-    uses: rbpatt2019/shared-workflows/.github/workflows/reusable/check_nix.yaml@main
+    uses: rbpatt2019/shared-workflows/.github/workflows/check_nix.yaml@main
     with:
       os: ubuntu-latest

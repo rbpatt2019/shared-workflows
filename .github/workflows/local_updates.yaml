@@ -6,7 +6,7 @@ on:
     - cron: 1 0 1,15 * *
 jobs:
   check_repo:
-    uses: rbpatt2019/shared-workflows/.github/workflows/reusable/update_nix.yaml@main
+    uses: rbpatt2019/shared-workflows/.github/workflows/update_nix.yaml@main
     with:
       os: ubuntu-latest
     secrets:
