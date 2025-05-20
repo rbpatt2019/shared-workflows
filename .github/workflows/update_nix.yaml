@@ -14,6 +14,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Configure git
+        uses: qoomon/actions--setup-git@v1
+        with:
+          user: bot
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v16
       - name: Update lock file
