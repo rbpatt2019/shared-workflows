@@ -24,6 +24,7 @@ jobs:
         run: nix flake update -v --commit-lock-file
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
+        if: ${{ github.event_name != 'pull_request' && contains(github.ref, 'main')}}
         with:
           token: ${{ secrets.pat }}
           title: 'ci(flake.lock): Automatic flake update'
