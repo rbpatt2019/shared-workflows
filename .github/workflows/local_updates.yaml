@@ -10,4 +10,4 @@ jobs:
     with:
       os: ubuntu-latest
     secrets:
-      pat: ${{ secrets.token }}
+      pat: ${{ secrets.PAT }}
