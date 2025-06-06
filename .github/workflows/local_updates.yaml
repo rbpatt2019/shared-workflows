@@ -1,7 +1,5 @@
 # This is for updating this repo, and is not designed to be re-used.
 on:
-  pull_request:
-    branches: [main]
   schedule:
     - cron: 1 0 1,15 * *
 jobs:
