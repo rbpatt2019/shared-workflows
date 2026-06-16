@@ -19,7 +19,7 @@ jobs:
         with:
           user: bot
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: nixbuild/nix-quick-install-action@v34
       - name: Update lock file
         run: nix flake update -v --commit-lock-file
       - name: Create Pull Request
