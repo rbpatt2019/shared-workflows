@@ -10,9 +10,9 @@ jobs:
     runs-on: ${{ inputs.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Nix
-        uses: nixbuild/nix-quick-install-action@v34
+        uses: nixbuild/nix-quick-install-action@v35
       - name: Run Checks
         id: run_checks
         run: |
