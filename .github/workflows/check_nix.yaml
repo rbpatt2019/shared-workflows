@@ -17,7 +17,7 @@ jobs:
         id: run_checks
         run: |
           set -o pipefail
-          ERROR=$(nix flake check 2>&1)
+          ERROR=$(nix flake check . 2>&1)
           { echo "errormsg<<EOF"; echo "$ERROR"; echo "EOF"; } >> "$GITHUB_OUTPUT"
       - name: Print full failure logs
         if: ${{ failure() && steps.run_checks.conclusion == 'failure' }}
