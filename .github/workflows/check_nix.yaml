@@ -21,4 +21,4 @@ jobs:
           { echo "errormsg<<EOF"; echo "$ERROR"; echo "EOF"; } >> "$GITHUB_OUTPUT"
       - name: Print full failure logs
         if: ${{ failure() && steps.run_checks.conclusion == 'failure' }}
-        run: nix log $(grep "For full logs, run" <<< "${{ steps.run_checks.outputs.errormsg }}" | grep -oE "/nix/store/.*.drv")
+        run: nix log "$(grep "For full logs, run" <<< "${{ steps.run_checks.outputs.errormsg }}" | grep -oE "/nix/store/.*.drv")"
