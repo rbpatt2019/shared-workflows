@@ -17,13 +17,8 @@ jobs:
         id: run_checks
         run: |
           set -o pipefail
-          nix flake check 2>&1 |
-            tee /tmp/nix-flake-check.log
+          ERROR=$(nix flake check . 2>&1)
+          { echo "errormsg<<EOF"; echo "$ERROR"; echo "EOF"; } >> "$GITHUB_OUTPUT"
       - name: Print full failure logs
         if: ${{ failure() && steps.run_checks.conclusion == 'failure' }}
-        run: |-
-          DRV=$(
-            grep "For full logs, run" /tmp/nix-flake-check.log |
-            grep -oE "/nix/store/.*.drv"
-          )
-          nix log "$DRV"
+        run: nix log "$(grep "For full logs, run" <<< "${{ steps.run_checks.outputs.errormsg }}" | grep -oE "/nix/store/.*.drv")"

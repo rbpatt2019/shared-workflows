@@ -10,7 +10,6 @@
 
   outputs =
     inputs@{
-      nixpkgs,
       flake-parts,
       ...
     }:
@@ -23,7 +22,11 @@
           inputs.treefmt-nix.flakeModule
           inputs.git-hooks-nix.flakeModule
         ];
-        systems = nixpkgs.lib.systems.flakeExposed;
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+          "aarch64-darwin"
+        ];
         perSystem =
           { config, ... }:
           {
